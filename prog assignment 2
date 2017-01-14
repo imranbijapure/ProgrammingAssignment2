@@ -1,0 +1,107 @@
+# Peer-graded Assignment: Programming Assignment 2: Lexical Scoping
+> 
+ # The function creates a  "matrix" object which cache its inverse.
+## Caching the inverse of a matrix
+## S quare Matrix is given as input to invert
+
+# makeCacheMatrix function creates a special "matrix" object that can cache its inverse
+# Returns a list containing functions set(), get(), setinv(), getinv()
+# x is passed as a function argument and defined as a matrix
+> 
+> makeCacheMatrix <- function(x = matrix()) {
+# Objective to be used later
++   inv <- NULL
+# to set the values for data & retreive
++   set <- function(y) {
+#assign the y argument input y to x.
++     x <<- y
++     inv <<- NULL
++   }
++   get <- function() x
+#setting the inverse object value to parent directory 
++   setInverse <- function(inverse) inv <<- inverse
+# to get the object inv
++   getInverse <- function() inv
+# getting the functions in the list
++   list(set = set,
++        get = get,
++        setInverse = setInverse,
++        getInverse = getInverse)
++ }
+> 
+#cacheSolve function computes the inverse of the "special" matrix returned by makeCacheMatrix
+# If the inverse has already been calculated(and the matrix has not changed) 
+#    then cacheSolve uses the cache to retrieve the inverse
+> 
+> cacheSolve <- function(x, ...) {
++   # Return a matrix that is the inverse of 'x'
++   inv <- x$getInverse()
+#checking if inverse already exist in the cache 
++   if (!is.null(inv)) {
+# If exist, gets the inverse from cache and skips further compute 
++     message("getting cached data")
+#Returns the inverse of the original matrix input x
++     return(inv)
++   }
+# If not calculates the inverse
++   mat <- x$get()
+#usingthefunctionsolve to calculate the inverse of the matrix
++   inv <- solve(mat, ...)
+# setting the value in the cache
++   x$setInverse(inv)
+#getting the inverse
++   inv
++ }
+> #Testing the programme
+> my_matrix <- makeCacheMatrix(matrix(100:103, 2, 2))
+> 
+> my_matrix$get()
+     [,1] [,2]
+[1,]  100  102
+[2,]  101  103
+> 
+> my_matrix$getInverse()
+NULL
+> 
+> cacheSolve(my_matrix)
+      [,1] [,2]
+[1,] -51.5   51
+[2,]  50.5  -50
+> 
+> cacheSolve(my_matrix)
+getting cached data
+      [,1] [,2]
+[1,] -51.5   51
+[2,]  50.5  -50
+> 
+> my_matrix$getInverse()
+      [,1] [,2]
+[1,] -51.5   51
+[2,]  50.5  -50
+> 
+> my_matrix$set(matrix(c(2, 2, 1, 4), 2, 2))
+> 
+> my_matrix$get()
+     [,1] [,2]
+[1,]    2    1
+[2,]    2    4
+> 
+> my_matrix$getInverse()
+NULL
+> 
+> cacheSolve(my_matrix)
+           [,1]       [,2]
+[1,]  0.6666667 -0.1666667
+[2,] -0.3333333  0.3333333
+> 
+> cacheSolve(my_matrix)
+getting cached data
+           [,1]       [,2]
+[1,]  0.6666667 -0.1666667
+[2,] -0.3333333  0.3333333
+> 
+> my_matrix$getInverse()
+           [,1]       [,2]
+[1,]  0.6666667 -0.1666667
+[2,] -0.3333333  0.3333333
+> 
